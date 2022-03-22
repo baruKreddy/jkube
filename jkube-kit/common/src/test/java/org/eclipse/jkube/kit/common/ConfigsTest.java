@@ -109,7 +109,7 @@ public class ConfigsTest {
 
   @ParameterizedTest
   @ValueSource(strings = {" 1 2 1337","1","0","fALsE","false"})
-  public void asBooleanValueWithUnsupportedStringShouldReturnFalse(String input) {
+  public void configsAsBooleanTest(String input) {
 
     assertThat(Configs.asBoolean(input)).isFalse();
   }
