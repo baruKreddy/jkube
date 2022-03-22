@@ -19,6 +19,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -105,28 +107,11 @@ public class ConfigsTest {
     assertThat(result).isNull();
   }
 
-  @Test
-  public void asBooleanValueWithUnsupportedStringShouldReturnFalse() {
-    // When
-    final boolean result = Configs.asBoolean(" 1 2 1337");
-    // Then
-    assertThat(result).isFalse();
-  }
+  @ParameterizedTest
+  @ValueSource(strings = {" 1 2 1337","1","0","fALsE","false"})
+  public void asBooleanValueWithUnsupportedStringShouldReturnFalse(String input) {
 
-  @Test
-  public void asBooleanValueWithOneShouldReturnFalse() {
-    // When
-    final boolean result = Configs.asBoolean("1");
-    // Then
-    assertThat(result).isFalse();
-  }
-
-  @Test
-  public void asBooleanValueWithZeroShouldReturnFalse() {
-    // When
-    final boolean result = Configs.asBoolean("0");
-    // Then
-    assertThat(result).isFalse();
+    assertThat(Configs.asBoolean(input)).isFalse();
   }
 
   @Test
@@ -151,22 +136,6 @@ public class ConfigsTest {
     final boolean result = Configs.asBoolean("TrUE");
     // Then
     assertThat(result).isTrue();
-  }
-
-  @Test
-  public void asBooleanValueWithFalseMixedCaseShouldReturnFalse() {
-    // When
-    final boolean result = Configs.asBoolean("fALsE");
-    // Then
-    assertThat(result).isFalse();
-  }
-
-  @Test
-  public void asBooleanValueWithFalseShouldReturnFalse() {
-    // When
-    final boolean result = Configs.asBoolean("false");
-    // Then
-    assertThat(result).isFalse();
   }
 
   @Test
