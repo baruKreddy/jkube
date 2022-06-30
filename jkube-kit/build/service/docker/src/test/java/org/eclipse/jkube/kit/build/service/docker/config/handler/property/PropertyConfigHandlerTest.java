@@ -23,9 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
-import mockit.Expectations;
-import mockit.Mocked;
 import org.eclipse.jkube.kit.common.AssemblyConfiguration;
 import org.eclipse.jkube.kit.common.JavaProject;
 import org.eclipse.jkube.kit.config.image.ImageConfiguration;
@@ -38,6 +35,7 @@ import org.eclipse.jkube.kit.config.image.build.BuildConfiguration;
 import org.eclipse.jkube.kit.config.image.build.CleanupMode;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import static org.eclipse.jkube.kit.config.image.build.BuildConfiguration.DEFAULT_CLEANUP;
 import static org.junit.Assert.assertArrayEquals;
@@ -46,6 +44,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 /**
  * @author roland
@@ -53,7 +52,7 @@ import static org.junit.Assert.assertTrue;
  */
 
 public class PropertyConfigHandlerTest {
-    @Mocked
+    @Mock
     private JavaProject javaProject;
 
     private PropertyConfigHandler configHandler;
@@ -468,11 +467,14 @@ public class PropertyConfigHandlerTest {
     private List<ImageConfiguration> resolveImage(ImageConfiguration image, final Properties properties) {
         //MavenProject project = mock(MavenProject.class);
         //when(project.getProperties()).thenReturn(properties);
-        new Expectations() {{
+        /*new Expectations() {{
             javaProject.getProperties(); result = properties;
             javaProject.getBaseDirectory(); minTimes = 0; maxTimes = 1; result = new File("./");
         }};
 
+         */
+        when(javaProject.getProperties()).thenReturn(properties);
+        when(javaProject.getBaseDirectory()).thenReturn(new File("./"));
         return configHandler.resolve(image, javaProject);
     }
 

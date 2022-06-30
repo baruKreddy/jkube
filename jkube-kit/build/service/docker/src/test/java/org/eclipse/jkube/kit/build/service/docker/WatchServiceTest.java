@@ -23,28 +23,27 @@ import org.eclipse.jkube.kit.common.KitLogger;
 import org.eclipse.jkube.kit.config.image.ImageConfiguration;
 import org.eclipse.jkube.kit.config.image.WatchImageConfiguration;
 import org.eclipse.jkube.kit.config.image.WatchMode;
-
-import mockit.Mocked;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class WatchServiceTest {
-    @Mocked
+    @Mock
     ArchiveService archiveService;
 
-    @Mocked
+    @Mock
     BuildService buildService;
 
-    @Mocked
+    @Mock
     QueryService queryService;
 
-    @Mocked
+    @Mock
     RunService runService;
 
-    @Mocked
+    @Mock
     KitLogger logger;
 
     ImageConfiguration imageConfiguration;
