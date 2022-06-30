@@ -33,6 +33,10 @@ import org.eclipse.jkube.kit.common.SystemMock;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import mockit.Expectations;
+import mockit.Mock;
+import mockit.MockUp;
+import mockit.Mocked;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.bootstrap.HttpServer;
@@ -40,26 +44,22 @@ import org.apache.http.impl.bootstrap.ServerBootstrap;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockedStatic;
 
 import static java.util.UUID.randomUUID;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockStatic;
 
 public class AuthConfigFactoryTest {
     public static final String ECR_NAME = "123456789012.dkr.ecr.bla.amazonaws.com";
     private AuthConfigFactory factory;
     private GsonBuilder gsonBuilder;
 
-    @Mock
+    @Mocked
     private KitLogger log;
 
-    @Mock
+    @Mocked
     private AwsSdkHelper awsSdkHelper;
 
     private HttpServer httpServer;
@@ -104,18 +104,10 @@ public class AuthConfigFactoryTest {
                     .build();
             }
         };
-        try (MockedStatic<KubernetesConfigAuthUtil> jibMockedStatic = mockStatic(KubernetesConfigAuthUtil.class)) {
-            AuthConfig config = mock(AuthConfig.class);
-            AuthConfig.builder()
-                    .username("test")
-                    .password("sometoken")
-                    .build();
-            jibMockedStatic.when(()->KubernetesConfigAuthUtil.readKubeConfigAuth()).thenReturn(config.getPassword());
-            // When
-            AuthConfig authConfig = AuthConfigFactory.getAuthConfigFromOpenShiftConfig(AuthConfigFactory.LookupMode.DEFAULT, authConfigMap);
-            // Then
-            assertAuthConfig(authConfig, "test", "sometoken");
-        }
+        // When
+        AuthConfig authConfig = AuthConfigFactory.getAuthConfigFromOpenShiftConfig(AuthConfigFactory.LookupMode.DEFAULT, authConfigMap);
+        // Then
+        assertAuthConfig(authConfig, "test", "sometoken");
     }
 
     @Test
@@ -198,8 +190,7 @@ public class AuthConfigFactoryTest {
     }
 
     @Test
-    public void testGetStandardAuthConfigFromProperties() throws IOException {
-        KitLogger logger = mock(KitLogger.class);
+    public void testGetStandardAuthConfigFromProperties(@Mocked KitLogger logger) throws IOException {
         // Given
         new SystemMock()
             .put("jkube.docker.username", "testuser")
